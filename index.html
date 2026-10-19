@@ -24,14 +24,21 @@
   .lang button.on { color: var(--acc); border-color: var(--acc); }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
   .card { display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; color: inherit; text-decoration: none; transition: border-color .2s, transform .2s; }
-  .card:hover, .card:focus-visible { border-color: var(--acc); transform: translateY(-2px); outline: none; }
+  .card:hover, .card:focus-within { border-color: var(--acc); transform: translateY(-2px); }
+  .card a:focus-visible { outline: none; }
   .card img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; background: #0e1a24; }
   .card .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 6px; }
   .card h2 { margin: 0; font-size: 20px; font-weight: 600; }
   .card p { margin: 0; color: var(--dim); font-size: 15px; }
   .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
   .tags span { font-size: 12px; color: var(--dim); border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; }
-  .soon { display: flex; align-items: center; justify-content: center; min-height: 240px; border: 1px dashed var(--line); border-radius: 14px; color: var(--dim); text-align: center; padding: 24px; }
+  .soon { display: flex; align-items: center; justify-content: center; min-height: 240px; border: 1px dashed var(--line); border-radius: 14px; color: var(--dim); text-align: center; padding: 24px; text-decoration: none; line-height: 1.5; transition: border-color .2s, color .2s; }
+  .soon:hover, .soon:focus-visible { border-color: var(--acc); color: var(--fg); outline: none; }
+  .soon strong { color: var(--fg); font-size: 18px; font-weight: 600; }
+  .by { margin-top: auto; padding-top: 10px; font-size: 13px; color: var(--dim); }
+  .by a { color: var(--acc); text-decoration: none; }
+  .by a:hover { text-decoration: underline; }
+  .card .body { flex: 1; }
   .note { margin-top: 40px; color: var(--dim); font-size: 14px; }
   .note a { color: var(--acc); }
 </style>
@@ -54,17 +61,29 @@
     </div>
   </header>
 
-  <main class="grid">
-    <a class="card" href="orbit-to-abyss/">
-      <img src="orbit-to-abyss/thumb.jpg" alt="Sunset over FFT-simulated ocean waves" width="960" height="540">
-      <div class="body">
-        <h2>Blue Planet — Orbit to Abyss</h2>
-        <p data-en="Fall from orbit through the atmosphere and clouds, onto the waves, over a coral reef and down a reef wall to hydrothermal vents 3,400 m deep." data-tr="Yörüngeden atmosfer ve bulutların arasından dalgalara, mercan resifinin üstünden resif duvarı boyunca 3.400 m derindeki hidrotermal bacalara in."></p>
-        <div class="tags"><span>FFT ocean</span><span>volumetric clouds</span><span>atmosphere</span><span>underwater optics</span><span>procedural audio</span></div>
-      </div>
+  <main class="grid" id="grid">
+    <a class="soon" id="addCard" href="https://github.com/sahmett/onefile-worlds#contributing">
+      <span><strong data-en="Add your world" data-tr="Kendi dünyanı ekle"></strong><br><span data-en="One HTML file, no engine. See how to contribute →" data-tr="Tek HTML dosyası, motor yok. Nasıl katkı verilir →"></span></span>
     </a>
-    <div class="soon" data-en="Next world — coming soon" data-tr="Sıradaki dünya — yakında"></div>
   </main>
+
+  <!-- The list of worlds. To add yours, append one entry (see CONTRIBUTING.md). -->
+  <script type="application/json" id="worlds">
+[
+  {
+    "id": "orbit-to-abyss",
+    "title": { "en": "Blue Planet — Orbit to Abyss", "tr": "Blue Planet — Yörüngeden Abise" },
+    "description": {
+      "en": "Fall from orbit through the atmosphere and clouds, onto the waves, over a coral reef and down a reef wall to hydrothermal vents 3,400 m deep.",
+      "tr": "Yörüngeden atmosfer ve bulutların arasından dalgalara, mercan resifinin üstünden resif duvarı boyunca 3.400 m derindeki hidrotermal bacalara in."
+    },
+    "alt": { "en": "Sunset over FFT-simulated ocean waves", "tr": "FFT ile simüle edilen okyanus dalgalarında gün batımı" },
+    "tags": ["FFT ocean", "volumetric clouds", "atmosphere", "underwater optics", "procedural audio"],
+    "author": "Seyyit Ahmet Kılıç",
+    "github": "sahmett"
+  }
+]
+  </script>
 
   <p class="note" data-en-html="Needs a browser with WebGPU (recent Chrome or Edge; Safari 26+) and a reasonably capable GPU. Source on &lt;a href=&quot;https://github.com/sahmett/onefile-worlds&quot;&gt;GitHub&lt;/a&gt;." data-tr-html="WebGPU destekleyen bir tarayıcı (güncel Chrome veya Edge; Safari 26+) ve makul bir ekran kartı gerekir. Kaynak kod &lt;a href=&quot;https://github.com/sahmett/onefile-worlds&quot;&gt;GitHub&lt;/a&gt;’da."></p>
 </div>
@@ -72,7 +91,31 @@
   // language: EN by default, remembered per browser (shared with the worlds)
   let lang = 'en';
   try { const v = localStorage.getItem('bp.lang'); if (v === 'tr' || v === 'en') lang = v; } catch (e) { /* storage unavailable */ }
+  // cards are built from the JSON list with textContent only (contributed text is never parsed as HTML)
+  const worlds = JSON.parse(document.getElementById('worlds').textContent);
+  function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function renderCards() {
+    const grid = document.getElementById('grid'), add = document.getElementById('addCard');
+    grid.querySelectorAll('.card').forEach(c => c.remove());
+    for (const w of worlds) {
+      const pick = o => (o && (o[lang] || o.en)) || '';
+      const card = el('div', 'card');
+      const link = el('a'); link.href = w.id + '/'; link.style.cssText = 'display: contents; color: inherit; text-decoration: none';
+      const img = el('img'); img.src = w.id + '/thumb.jpg'; img.alt = pick(w.alt); img.width = 960; img.height = 540; img.loading = 'lazy';
+      const body = el('div', 'body');
+      body.append(el('h2', null, pick(w.title)), el('p', null, pick(w.description)));
+      const tags = el('div', 'tags'); for (const tg of w.tags || []) tags.append(el('span', null, tg)); body.append(tags);
+      link.append(img, body);
+      const by = el('div', 'by'); by.append(document.createTextNode((lang === 'tr' ? 'Yazar: ' : 'By ') + w.author + ' · '));
+      const gh = el('a', null, '@' + w.github); gh.href = 'https://github.com/' + encodeURIComponent(w.github); by.append(gh);
+      const wrap = el('div', 'body'); wrap.style.paddingTop = '0'; wrap.append(by);
+      card.append(link, wrap);
+      card.tabIndex = -1;
+      grid.insertBefore(card, add);
+    }
+  }
   function apply() {
+    renderCards();
     document.documentElement.lang = lang;
     document.querySelectorAll('[data-en]').forEach(el => { el.textContent = el.dataset[lang]; });
     document.querySelectorAll('[data-en-html]').forEach(el => { el.innerHTML = lang === 'tr' ? el.dataset.trHtml : el.dataset.enHtml; });

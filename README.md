@@ -34,11 +34,14 @@ To work on a world locally, any static server works, for example:
 python3 -m http.server 8080
 ```
 
-## Adding a world
+## Contributing
 
-1. Create a folder with a short, lowercase name, e.g. `meadow/`.
-2. Put the whole world in `meadow/index.html` and add a `meadow/README.md`.
-3. Add a 960×540 `meadow/thumb.jpg` and a card in the root `index.html`.
+New worlds are welcome. In short:
+
+1. Fork the repo and create a folder with a short, lowercase name, e.g. `meadow/`.
+2. Put the whole world in `meadow/index.html` (one file, no engine or libraries, no external files) and add a `meadow/README.md` and a 960×540 `meadow/thumb.jpg`.
+3. Add one entry for your world to the list near the end of the root `index.html`: title, description, tags, your name and GitHub username. Your name appears on the gallery card.
+4. Open a pull request. Contributions are released under the MIT license.
 
 ## License
 
@@ -68,6 +71,15 @@ WebGPU ile gerçek zamanlı çizilen dünyalar; her biri çift tıklayıp açabi
 ### Çalıştırma
 
 Bir dünyanın `index.html` dosyasını WebGPU destekleyen bir tarayıcıda aç (güncel Chrome veya Edge, Safari 26+). Ayrı ya da güncel bir entegre ekran kartı önerilir; her dünyanın bir kalite ayarı var.
+
+### Katkı
+
+Yeni dünyalar memnuniyetle karşılanır. Kısaca:
+
+1. Repoyu fork'la ve kısa, küçük harfli bir klasör oluştur; ör. `meadow/`.
+2. Dünyanın tamamını `meadow/index.html` içine koy (tek dosya; motor, kütüphane ya da harici dosya yok), bir `meadow/README.md` ve 960×540 boyutunda bir `meadow/thumb.jpg` ekle.
+3. Kök dizindeki `index.html`'in sonlarına doğru duran listeye dünyan için bir kayıt ekle: başlık, açıklama, etiketler, adın ve GitHub kullanıcı adın. Adın galerideki kartta görünür.
+4. Pull request aç. Katkılar MIT lisansıyla yayımlanır.
 
 ### Lisans
 
