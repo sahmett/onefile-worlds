@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>onefile-worlds</title>
+<meta name="description" content="Real-time WebGPU worlds, each in a single HTML file. No engine, no build step.">
+<meta property="og:title" content="onefile-worlds">
+<meta property="og:description" content="Real-time WebGPU worlds, each in a single HTML file.">
+<meta property="og:image" content="orbit-to-abyss/thumb.jpg">
+<style>
+  :root { --bg: #05080c; --panel: #0b131b; --line: rgba(255,255,255,.12); --fg: #eaf2f7; --dim: #9fb2c0; --acc: #7fd3ff; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 56px 20px 80px; }
+  header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 40px; }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+  h1 { margin: 0; font-size: clamp(32px, 6vw, 52px); font-weight: 600; letter-spacing: -.02em; }
+  .lede { margin: 8px 0 0; color: var(--dim); max-width: 620px; }
+  .rules { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; padding: 0; list-style: none; }
+  .rules li { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; }
+  .lang { display: flex; gap: 4px; }
+  .lang button { height: 36px; min-width: 44px; border: 1px solid var(--line); background: transparent; color: var(--dim); border-radius: 8px; font: 500 13px inherit; cursor: pointer; }
+  .lang button.on { color: var(--acc); border-color: var(--acc); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+  .card { display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; color: inherit; text-decoration: none; transition: border-color .2s, transform .2s; }
+  .card:hover, .card:focus-visible { border-color: var(--acc); transform: translateY(-2px); outline: none; }
+  .card img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; background: #0e1a24; }
+  .card .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 6px; }
+  .card h2 { margin: 0; font-size: 20px; font-weight: 600; }
+  .card p { margin: 0; color: var(--dim); font-size: 15px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .tags span { font-size: 12px; color: var(--dim); border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; }
+  .soon { display: flex; align-items: center; justify-content: center; min-height: 240px; border: 1px dashed var(--line); border-radius: 14px; color: var(--dim); text-align: center; padding: 24px; }
+  .note { margin-top: 40px; color: var(--dim); font-size: 14px; }
+  .note a { color: var(--acc); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1 class="mono">onefile-worlds</h1>
+      <p class="lede" data-en="Real-time worlds rendered with WebGPU, each one a single HTML file you can double-click. No engine, no libraries, no build step." data-tr="WebGPU ile gerçek zamanlı çizilen dünyalar; her biri çift tıklayıp açabileceğin tek bir HTML dosyası. Motor yok, kütüphane yok, derleme adımı yok."></p>
+      <ul class="rules">
+        <li data-en="One file" data-tr="Tek dosya"></li>
+        <li data-en="No engine" data-tr="Motor yok"></li>
+        <li>WebGPU + WGSL</li>
+        <li>EN / TR</li>
+      </ul>
+    </div>
+    <div class="lang" role="group" aria-label="Language">
+      <button data-set="en">EN</button><button data-set="tr">TR</button>
+    </div>
+  </header>
+
+  <main class="grid">
+    <a class="card" href="orbit-to-abyss/">
+      <img src="orbit-to-abyss/thumb.jpg" alt="Sunset over FFT-simulated ocean waves" width="960" height="540">
+      <div class="body">
+        <h2>Blue Planet — Orbit to Abyss</h2>
+        <p data-en="Fall from orbit through the atmosphere and clouds, onto the waves, over a coral reef and down a reef wall to hydrothermal vents 3,400 m deep." data-tr="Yörüngeden atmosfer ve bulutların arasından dalgalara, mercan resifinin üstünden resif duvarı boyunca 3.400 m derindeki hidrotermal bacalara in."></p>
+        <div class="tags"><span>FFT ocean</span><span>volumetric clouds</span><span>atmosphere</span><span>underwater optics</span><span>procedural audio</span></div>
+      </div>
+    </a>
+    <div class="soon" data-en="Next world — coming soon" data-tr="Sıradaki dünya — yakında"></div>
+  </main>
+
+  <p class="note" data-en-html="Needs a browser with WebGPU (recent Chrome or Edge; Safari 26+) and a reasonably capable GPU. Source on &lt;a href=&quot;https://github.com/sahmett/onefile-worlds&quot;&gt;GitHub&lt;/a&gt;." data-tr-html="WebGPU destekleyen bir tarayıcı (güncel Chrome veya Edge; Safari 26+) ve makul bir ekran kartı gerekir. Kaynak kod &lt;a href=&quot;https://github.com/sahmett/onefile-worlds&quot;&gt;GitHub&lt;/a&gt;’da."></p>
+</div>
+<script>
+  // language: EN by default, remembered per browser (shared with the worlds)
+  let lang = 'en';
+  try { const v = localStorage.getItem('bp.lang'); if (v === 'tr' || v === 'en') lang = v; } catch (e) { /* storage unavailable */ }
+  function apply() {
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-en]').forEach(el => { el.textContent = el.dataset[lang]; });
+    document.querySelectorAll('[data-en-html]').forEach(el => { el.innerHTML = lang === 'tr' ? el.dataset.trHtml : el.dataset.enHtml; });
+    document.querySelectorAll('[data-set]').forEach(b => b.classList.toggle('on', b.dataset.set === lang));
+  }
+  document.querySelectorAll('[data-set]').forEach(b => b.onclick = () => {
+    lang = b.dataset.set; try { localStorage.setItem('bp.lang', lang); } catch (e) { /* storage unavailable */ }
+    apply();
+  });
+  apply();
+</script>
+</body>
+</html>
