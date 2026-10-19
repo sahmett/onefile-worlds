@@ -2,6 +2,8 @@
 
 A real-time WebGPU descent from orbit to the abyssal seafloor, in a single HTML file.
 
+**The whole planet is 186 KB** of readable, unminified source: atmosphere, clouds, FFT ocean, reef, abyss, fish, sound and interface. Over the network it is a **~59 KB** download (gzip). No engine, no libraries, no asset files.
+
 **[Open it →](https://sahmett.github.io/onefile-worlds/orbit-to-abyss/)**
 
 [Türkçe aşağıda ↓](#türkçe)
@@ -61,6 +63,8 @@ Some ocean techniques (the JONSWAP/Donelan–Banner spectrum, LEAN slope moments
 ## Türkçe
 
 Yörüngeden abisal deniz tabanına gerçek zamanlı bir WebGPU inişi, tek bir HTML dosyasında.
+
+**Gezegenin tamamı 186 KB**: atmosfer, bulutlar, FFT okyanusu, resif, abis, balıklar, ses ve arayüz; okunabilir, küçültülmemiş kaynak kod. Ağ üzerinden **~59 KB** iniyor (gzip). Motor, kütüphane ya da harici dosya yok.
 
 **[Aç →](https://sahmett.github.io/onefile-worlds/orbit-to-abyss/)**
 

@@ -26,6 +26,16 @@
   .card { display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; color: inherit; text-decoration: none; transition: border-color .2s, transform .2s; }
   .card:hover, .card:focus-within { border-color: var(--acc); transform: translateY(-2px); }
   .card a:focus-visible { outline: none; }
+  .thumb { position: relative; }
+  .size { position: absolute; left: 12px; top: 12px; display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; border-radius: 10px;
+    background: rgba(5,8,12,.78); border: 1px solid rgba(127,211,255,.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  .size b { font: 600 22px/1 ui-monospace, "SF Mono", Menlo, monospace; color: var(--acc); letter-spacing: -.01em; }
+  .size span { font-size: 11px; letter-spacing: .06em; color: var(--dim); }
+  .stats { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 22px; }
+  .stats div { display: flex; flex-direction: column; }
+  .stats b { font: 600 34px/1.05 ui-monospace, "SF Mono", Menlo, monospace; color: var(--fg); letter-spacing: -.02em; }
+  .stats b.acc { color: var(--acc); }
+  .stats span { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); margin-top: 4px; }
   .card img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; background: #0e1a24; }
   .card .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 6px; }
   .card h2 { margin: 0; font-size: 20px; font-weight: 600; }
@@ -49,6 +59,12 @@
     <div>
       <h1 class="mono">onefile-worlds</h1>
       <p class="lede" data-en="Real-time worlds rendered with WebGPU, each one a single HTML file you can double-click. No engine, no libraries, no build step." data-tr="WebGPU ile gerçek zamanlı çizilen dünyalar; her biri çift tıklayıp açabileceğin tek bir HTML dosyası. Motor yok, kütüphane yok, derleme adımı yok."></p>
+      <div class="stats" aria-label="Blue Planet in numbers">
+        <div><b class="acc mono" id="statKB">186 KB</b><span data-en="the whole planet" data-tr="gezegenin tamamı"></span></div>
+        <div><b class="mono" id="statGz">59 KB</b><span data-en="download (gzip)" data-tr="indirme (gzip)"></span></div>
+        <div><b class="mono">1</b><span data-en="HTML file" data-tr="HTML dosyası"></span></div>
+        <div><b class="mono">0</b><span data-en="dependencies" data-tr="bağımlılık"></span></div>
+      </div>
       <ul class="rules">
         <li data-en="One file" data-tr="Tek dosya"></li>
         <li data-en="No engine" data-tr="Motor yok"></li>
@@ -80,7 +96,8 @@
     "alt": { "en": "Sunset over FFT-simulated ocean waves", "tr": "FFT ile simüle edilen okyanus dalgalarında gün batımı" },
     "tags": ["FFT ocean", "volumetric clouds", "atmosphere", "underwater optics", "procedural audio"],
     "author": "Seyyit Ahmet Kılıç",
-    "github": "sahmett"
+    "github": "sahmett",
+    "size": { "bytes": 185574, "gzip": 59000 }
   }
 ]
   </script>
@@ -94,6 +111,15 @@
   // cards are built from the JSON list with textContent only (contributed text is never parsed as HTML)
   const worlds = JSON.parse(document.getElementById('worlds').textContent);
   function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  const kb = b => b ? Math.round(b / 1000).toLocaleString(lang === 'tr' ? 'tr-TR' : 'en-US') + ' KB' : '—';
+  // measure the real file sizes when served over http(s): raw bytes and gzip via CompressionStream
+  async function measure(w) {
+    try {
+      const txt = await (await fetch(w.id + '/index.html', { cache: 'no-store' })).blob();
+      const gz = 'CompressionStream' in window ? await new Response(txt.stream().pipeThrough(new CompressionStream('gzip'))).blob() : null;
+      w.size = { bytes: txt.size, gzip: gz ? gz.size : (w.size && w.size.gzip) };
+    } catch (e) { /* file:// or offline: keep the listed sizes */ }
+  }
   function renderCards() {
     const grid = document.getElementById('grid'), add = document.getElementById('addCard');
     grid.querySelectorAll('.card').forEach(c => c.remove());
@@ -105,7 +131,11 @@
       const body = el('div', 'body');
       body.append(el('h2', null, pick(w.title)), el('p', null, pick(w.description)));
       const tags = el('div', 'tags'); for (const tg of w.tags || []) tags.append(el('span', null, tg)); body.append(tags);
-      link.append(img, body);
+      const thumb = el('div', 'thumb'); thumb.append(img);
+      const badge = el('div', 'size'); badge.dataset.world = w.id;
+      badge.append(el('b', null, kb(w.size && w.size.bytes)), el('span', null, (lang === 'tr' ? 'tek dosya · ' : 'one file · ') + kb(w.size && w.size.gzip) + (lang === 'tr' ? ' indirme' : ' download')));
+      thumb.append(badge);
+      link.append(thumb, body);
       const by = el('div', 'by'); by.append(document.createTextNode((lang === 'tr' ? 'Yazar: ' : 'By ') + w.author + ' · '));
       const gh = el('a', null, '@' + w.github); gh.href = 'https://github.com/' + encodeURIComponent(w.github); by.append(gh);
       const wrap = el('div', 'body'); wrap.style.paddingTop = '0'; wrap.append(by);
@@ -116,6 +146,8 @@
   }
   function apply() {
     renderCards();
+    const f = worlds[0];
+    if (f && f.size) { document.getElementById('statKB').textContent = kb(f.size.bytes); document.getElementById('statGz').textContent = kb(f.size.gzip); }
     document.documentElement.lang = lang;
     document.querySelectorAll('[data-en]').forEach(el => { el.textContent = el.dataset[lang]; });
     document.querySelectorAll('[data-en-html]').forEach(el => { el.innerHTML = lang === 'tr' ? el.dataset.trHtml : el.dataset.enHtml; });
@@ -126,6 +158,7 @@
     apply();
   });
   apply();
+  if (location.protocol.startsWith('http')) Promise.all(worlds.map(measure)).then(apply);
 </script>
 </body>
 </html>

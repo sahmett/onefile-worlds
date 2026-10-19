@@ -11,9 +11,9 @@ No engine, no libraries, no build step.
 
 ## Worlds
 
-| World | What it is |
-|---|---|
-| [**Blue Planet — Orbit to Abyss**](orbit-to-abyss/) | Fall from orbit through the atmosphere and clouds, onto FFT-simulated waves, over a coral reef and down a reef wall to hydrothermal vents 3,400 m deep. [Details](orbit-to-abyss/README.md) |
+| World | Size | What it is |
+|---|---|---|
+| [**Blue Planet — Orbit to Abyss**](orbit-to-abyss/) | **186 KB**<br>~59 KB download | Fall from orbit through the atmosphere and clouds, onto FFT-simulated waves, over a coral reef and down a reef wall to hydrothermal vents 3,400 m deep. [Details](orbit-to-abyss/README.md) |
 
 ## The rules
 
@@ -57,9 +57,9 @@ WebGPU ile gerçek zamanlı çizilen dünyalar; her biri çift tıklayıp açabi
 
 ### Dünyalar
 
-| Dünya | Nedir |
-|---|---|
-| [**Blue Planet — Yörüngeden Abise**](orbit-to-abyss/) | Yörüngeden atmosfer ve bulutların arasından FFT ile simüle edilen dalgalara, mercan resifinin üstünden resif duvarı boyunca 3.400 m derindeki hidrotermal bacalara in. [Ayrıntılar](orbit-to-abyss/README.md) |
+| Dünya | Boyut | Nedir |
+|---|---|---|
+| [**Blue Planet — Yörüngeden Abise**](orbit-to-abyss/) | **186 KB**<br>~59 KB indirme | Yörüngeden atmosfer ve bulutların arasından FFT ile simüle edilen dalgalara, mercan resifinin üstünden resif duvarı boyunca 3.400 m derindeki hidrotermal bacalara in. [Ayrıntılar](orbit-to-abyss/README.md) |
 
 ### Kurallar
 

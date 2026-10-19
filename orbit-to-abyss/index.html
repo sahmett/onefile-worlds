@@ -113,7 +113,7 @@
 </head>
 <body>
 <canvas id="c"></canvas>
-<div class="hud" id="tl"><div class="brand">BLUE PLANET</div><div class="phase" id="phase">—</div><div class="sub" id="phasesub"></div></div>
+<div class="hud" id="tl"><div class="brand">BLUE PLANET · <span class="fileKB">186 KB</span></div><div class="phase" id="phase">—</div><div class="sub" id="phasesub"></div></div>
 <div class="hud" id="stats"></div>
 <div class="hud" id="gauge"><div class="track"></div><div class="mark" id="mark"></div></div>
 <div class="hud" id="readout"><div class="k" id="rk">ALTITUDE</div><div class="v" id="rv">—</div></div>
@@ -172,7 +172,7 @@
   <div class="live" id="iLive"><div><span class="lk" data-i18n="i_press">Pressure</span><span class="lv" id="iP">—</span></div><div><span class="lk" data-i18n="i_temp">Temperature</span><span class="lv" id="iT">—</span></div><div><span class="lk" id="iLk">Light</span><span class="lv" id="iL">—</span></div></div>
   <button class="igo" id="iGo" data-i18n="i_go">Go there →</button></div>
 <div id="toast"></div>
-<div id="msg"><div><div class="t">BLUE PLANET</div><div class="h" data-i18n="m_title">From Orbit to Abyss</div><div class="s" id="msgs">Starting WebGPU…</div></div></div>
+<div id="msg"><div><div class="t">BLUE PLANET · <span class="fileKB">186 KB</span></div><div class="h" data-i18n="m_title">From Orbit to Abyss</div><div class="s" id="msgs">Starting WebGPU…</div></div></div>
 
 <script type="module">
 // ============================================================================================
@@ -2177,6 +2177,14 @@ function applyStaticLang() {
   document.querySelectorAll('[data-lang]').forEach(b => b.classList.toggle('on', b.dataset.lang === LANG));
 }
 applyStaticLang();
+// the whole world is this one file: show its size (measured from the file itself when served over http)
+(async () => {
+  let b = 0;
+  try { if (location.protocol.startsWith('http')) b = (await (await fetch(location.pathname, { cache: 'no-store' })).blob()).size; } catch (e) { /* offline */ }
+  if (!b) b = new Blob(['<!doctype html>\n' + document.documentElement.outerHTML]).size;
+  const txt = Math.round(b / 1000).toLocaleString(LOCALE()) + ' KB';
+  document.querySelectorAll('.fileKB').forEach(el => { el.textContent = txt; });
+})();
 
 // ============================================================================================
 //  Layer guide: bilingual cards for each layer from orbit to the abyss
